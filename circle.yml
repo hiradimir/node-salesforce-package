@@ -16,6 +16,7 @@ test:
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/xunit/
     - cp coverage/xunit.xml $CIRCLE_TEST_REPORTS/xunit/
+    - bash <(curl -s https://codecov.io/bash)
 
 general:
   artifacts:
