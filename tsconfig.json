@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "types": [
+            "node",
+            "mocha"
+        ],
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "outDir": "src/js/"
+    },
+    "include": [
+        "src/ts/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

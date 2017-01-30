@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "class-name": true,
+    "curly": true,
+    "eofline": false,
+    "forin": true,
+    "max-line-length": [true, 140],
+    "one-line": [true,
+      "check-open-brace",
+      "check-whitespace"
+    ],
+    "quotemark": [true, "double"],
+    "semicolon": true,
+    "variable-name": false
+  }
+}
