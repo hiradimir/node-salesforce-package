@@ -32,6 +32,10 @@ const defaultOptions = {
   ]
 };
 
+export interface PackageType {
+  "members": string[];
+  "name": string;
+}
 
 export class PackageXMLGenerater {
 
@@ -43,13 +47,17 @@ export class PackageXMLGenerater {
     }
   };
 
-  options: {typeKeys: any, typeOrder: string[]} = <any>{};
+  options: {typeKeys: any, typeOrder: string[]} = {
+    typeKeys: defaultOptions.typeKeys,
+    typeOrder: defaultOptions.typeOrder
+  };
 
-  constructor(options: {sfdcPackage?: {Package: {version?: string}}, typeKeys?: {[index: string]: string}, typeOrder?: string[]}) {
-    this.options = nodeExtend(true, this.sfdcPackage, options.sfdcPackage);
+  constructor(options: {sfdcPackage?: {Package: {version?: string}}, typeKeys?: {[index: string]: string}, typeOrder?: string[]} = {}) {
+    this.sfdcPackage = nodeExtend(true, this.sfdcPackage, options.sfdcPackage);
+    this.options = nodeExtend(true, this.options, {typeKeys: options.typeKeys, typeOrder: options.typeOrder});
   }
 
-  getOrCreateTypeObject(key) {
+  getOrCreateTypeObject(key): PackageType {
     for (let sfdcType in this.sfdcPackage.Package.types) {
       if (key === this.sfdcPackage.Package.types[sfdcType].name) {
         return this.sfdcPackage.Package.types[sfdcType];
@@ -68,10 +76,11 @@ export class PackageXMLGenerater {
   sortByTypes() {
 
     this.sfdcPackage.Package.types.sort(
-      function compare(type1, type2) {
+      (type1, type2) => {
         return this.options.typeOrder.indexOf(type1.name) - this.options.typeOrder.indexOf(type2.name);
       }
-    );
+    )
+    ;
   }
 
   toXML(files: Array<{dir: string, name: string}> = []) {

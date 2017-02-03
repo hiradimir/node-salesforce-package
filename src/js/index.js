@@ -32,6 +32,7 @@ var defaultOptions = {
 };
 var PackageXMLGenerater = (function () {
     function PackageXMLGenerater(options) {
+        if (options === void 0) { options = {}; }
         this.sfdcPackage = {
             "Package": {
                 "@xmlns": "http://soap.sforce.com/2006/04/metadata",
@@ -39,8 +40,12 @@ var PackageXMLGenerater = (function () {
                 "version": "36.0"
             }
         };
-        this.options = {};
-        this.options = nodeExtend(true, this.sfdcPackage, options.sfdcPackage);
+        this.options = {
+            typeKeys: defaultOptions.typeKeys,
+            typeOrder: defaultOptions.typeOrder
+        };
+        this.sfdcPackage = nodeExtend(true, this.sfdcPackage, options.sfdcPackage);
+        this.options = nodeExtend(true, this.options, { typeKeys: options.typeKeys, typeOrder: options.typeOrder });
     }
     PackageXMLGenerater.prototype.getOrCreateTypeObject = function (key) {
         for (var sfdcType in this.sfdcPackage.Package.types) {
@@ -57,8 +62,9 @@ var PackageXMLGenerater = (function () {
         this.getOrCreateTypeObject(packageKey).members.push(filepath.name);
     };
     PackageXMLGenerater.prototype.sortByTypes = function () {
-        this.sfdcPackage.Package.types.sort(function compare(type1, type2) {
-            return this.options.typeOrder.indexOf(type1.name) - this.options.typeOrder.indexOf(type2.name);
+        var _this = this;
+        this.sfdcPackage.Package.types.sort(function (type1, type2) {
+            return _this.options.typeOrder.indexOf(type1.name) - _this.options.typeOrder.indexOf(type2.name);
         });
     };
     PackageXMLGenerater.prototype.toXML = function (files) {
